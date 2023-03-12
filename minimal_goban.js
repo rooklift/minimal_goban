@@ -20,6 +20,7 @@ let player = BLACK;
 let ko = null;
 
 // For specifying coordinates, I use SGF-format strings e.g. "aa" is the 0,0 point (i.e. top left point).
+// That's mostly because this code is borrowed from my SGF editor.
 
 function in_bounds(s) {
 	if (typeof s !== "string" || s.length !== 2) {
