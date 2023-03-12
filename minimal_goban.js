@@ -73,8 +73,6 @@ function legal_move(s) {		// Returns true if the active player can legally play 
 	// Note that the above test is done there rather than inside the loop below
 	// because it's super-cheap and so worth doing in its entirety first.
 
-	let inactive = (player === BLACK) ? WHITE : BLACK;
-
 	for (let neighbour of neigh) {
 		if (state_at(neighbour) === player) {
 			let touched = Object.create(null);
@@ -82,7 +80,7 @@ function legal_move(s) {		// Returns true if the active player can legally play 
 			if (has_liberties_recurse(neighbour, touched)) {
 				return true;				// One of the groups we're joining has a liberty other than s.
 			}
-		} else if (state_at(neighbour) === inactive) {
+		} else if (state_at(neighbour) !== EMPTY) {
 			let touched = Object.create(null);
 			touched[s] = true;
 			if (!has_liberties_recurse(neighbour, touched)) {
