@@ -252,6 +252,16 @@ function draw() {
 		ctx.stroke();
 	}
 
+	for (let x of [3, 9, 15]) {
+		for (let y of [3, 9, 15]) {
+			let [gx, gy] = xy_to_canvas_xy(x, y);
+			ctx.fillStyle = "#000000ff";
+			ctx.beginPath();
+			ctx.arc(gx, gy, 3, 0, 2 * Math.PI);
+			ctx.fill();
+		}
+	}
+
 	for (let x = 0; x < 19; x++) {
 		for (let y = 0; y < 19; y++) {
 			if (board[x][y] !== EMPTY) {
