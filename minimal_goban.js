@@ -20,7 +20,7 @@ let player = BLACK;
 let ko = null;
 
 // For specifying coordinates, I use SGF-format strings e.g. "aa" is the 0,0 point (i.e. top left point).
-// That's mostly because this code is borrowed from my SGF editor.
+// That's mostly because this code is borrowed from my SGF editor. But one might not wish to do that otherwise.
 
 function in_bounds(s) {
 	if (typeof s !== "string" || s.length !== 2) {
@@ -40,7 +40,10 @@ function state_at(s) {
 	return board[x][y];
 }
 
-function neighbours(s) {		// Returns a list of points (each in SGF format, e.g. "cc") which neighbour the point given.
+function neighbours(s) {
+
+	// Returns a list of points (each in SGF format, e.g. "cc") which neighbour the point given.
+	
 	let ret = [];
 	if (!in_bounds(s)) {
 		return ret;
@@ -54,7 +57,9 @@ function neighbours(s) {		// Returns a list of points (each in SGF format, e.g. 
 	return ret;
 }
 
-function legal_move(s) {		// Returns true if the active player can legally play at the point given. Does NOT consider passes as "legal moves".
+function legal_move(s) {
+
+	// Returns true if the active player can legally play at the point given. Does NOT consider passes as "legal moves".
 
 	if (!in_bounds(s) || state_at(s) !== EMPTY || ko === s) {
 		return false;
@@ -66,7 +71,7 @@ function legal_move(s) {		// Returns true if the active player can legally play 
 
 	for (let neighbour of all_neighbours) {
 		if (state_at(neighbour) === EMPTY) {
-			return true;					// New stone has a liberty.
+			return true;								// New stone has a liberty.
 		}
 	}
 
@@ -78,13 +83,13 @@ function legal_move(s) {		// Returns true if the active player can legally play 
 			let touched = Object.create(null);
 			touched[s] = true;
 			if (has_liberties(neighbour, touched)) {
-				return true;				// One of the groups we're joining has a liberty other than s.
+				return true;							// One of the groups we're joining has a liberty other than s.
 			}
 		} else if (state_at(neighbour) !== EMPTY) {
 			let touched = Object.create(null);
 			touched[s] = true;
 			if (!has_liberties(neighbour, touched)) {
-				return true;				// One of the enemy groups has no liberties other than s.
+				return true;							// One of the enemy groups has no liberties other than s.
 			}
 		}
 	}
@@ -115,7 +120,10 @@ function has_liberties(s, touched) {
 	return false;
 }
 
-function play(s) {				// Play the move (or pass) given... contains no legality checks... (do those first!)
+function play(s) {
+
+	// Play the move (or pass) given... contains no legality checks... (do those first!)
+
 	let colour = player;
 	ko = null;
 	player = (player === BLACK) ? WHITE : BLACK;		// i.e. set the global player var to the next player.
@@ -144,7 +152,10 @@ function play(s) {				// Play the move (or pass) given... contains no legality c
 	}
 }
 
-function destroy_group(s) {		// Destroys the group and returns the number of stones removed.
+function destroy_group(s) {
+
+	// Destroys the group and returns the number of stones removed.
+
 	let group = group_at(s);
 	let colour = state_at(s);
 	for (let s of group) {
@@ -177,7 +188,10 @@ function group_at_recurse(s, touched) {
 	}
 }
 
-function empty_neighbour(s) {		// Returns an arbitrary empty neighbour of a point. Useful for finding ko square.
+function empty_neighbour(s) {
+
+	// Returns an arbitrary empty neighbour of a point. Useful for finding ko square.
+
 	for (let neighbour of neighbours(s)) {
 		if (state_at(neighbour) === EMPTY) {
 			return neighbour;
@@ -186,7 +200,10 @@ function empty_neighbour(s) {		// Returns an arbitrary empty neighbour of a poin
 	return null;
 }
 
-function one_liberty_singleton(s) {	// True iff the point has a stone which is not part of a group and has exactly 1 liberty.
+function one_liberty_singleton(s) {
+
+	// True iff the point has a stone which is not part of a group and has exactly 1 liberty.
+
 	let colour = state_at(s);
 	if (colour === EMPTY) {
 		return false;
@@ -225,15 +242,12 @@ function xy_to_s(x, y) {
 }
 
 function draw() {
-
 	let canvas_width = square_size * 19;
 	let canvas_height = square_size * 19;
-
 	let canvas = document.getElementById("boardcanvas");
 	canvas.width = canvas_width;
 	canvas.height = canvas_height;
 	let ctx = canvas.getContext("2d");
-
 	for (let x = 0; x < 19; x++) {
 		let [x1, y1] = xy_to_canvas_xy(x, 0);
 		let [x2, y2] = xy_to_canvas_xy(x, 19 - 1);
@@ -242,7 +256,6 @@ function draw() {
 		ctx.lineTo(x2, y2);
 		ctx.stroke();
 	}
-
 	for (let y = 0; y < 19; y++) {
 		let [x1, y1] = xy_to_canvas_xy(0, y);
 		let [x2, y2] = xy_to_canvas_xy(19 - 1, y);
@@ -251,7 +264,6 @@ function draw() {
 		ctx.lineTo(x2, y2);
 		ctx.stroke();
 	}
-
 	for (let x of [3, 9, 15]) {
 		for (let y of [3, 9, 15]) {
 			let [gx, gy] = xy_to_canvas_xy(x, y);
@@ -261,7 +273,6 @@ function draw() {
 			ctx.fill();
 		}
 	}
-
 	for (let x = 0; x < 19; x++) {
 		for (let y = 0; y < 19; y++) {
 			if (board[x][y] !== EMPTY) {
