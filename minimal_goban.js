@@ -22,12 +22,21 @@ let ko = null;
 // For specifying coordinates, I use SGF-format strings e.g. "aa" is the 0,0 point (i.e. top left point).
 // That's mostly because this code is borrowed from my SGF editor. But one might not wish to do that otherwise.
 
+function xy_to_s(x, y) {
+	return String.fromCharCode(x + 97) + String.fromCharCode(y + 97);
+}
+
+function s_to_xy(s) {
+	let x = s.charCodeAt(0) - 97;
+	let y = s.charCodeAt(1) - 97;
+	return [x, y];
+}
+
 function in_bounds(s) {
 	if (typeof s !== "string" || s.length !== 2) {
 		return false;
 	}
-	let x = s.charCodeAt(0) - 97;
-	let y = s.charCodeAt(1) - 97;
+	let [x, y] = s_to_xy(s);
 	return x >= 0 && x < 19 && y >= 0 && y < 19;
 }
 
@@ -35,21 +44,19 @@ function state_at(s) {
 	if (!in_bounds(s)) {
 		return EMPTY;
 	}
-	let x = s.charCodeAt(0) - 97;
-	let y = s.charCodeAt(1) - 97;
+	let [x, y] = s_to_xy(s);
 	return board[x][y];
 }
 
 function neighbours(s) {
 
 	// Returns a list of points (each in SGF format, e.g. "cc") which neighbour the point given.
-	
+
 	let ret = [];
 	if (!in_bounds(s)) {
 		return ret;
 	}
-	let x = s.charCodeAt(0) - 97;
-	let y = s.charCodeAt(1) - 97;
+	let [x, y] = s_to_xy(s);
 	if (x < 19 - 1) ret.push(xy_to_s(x + 1, y));
 	if (x >  0    ) ret.push(xy_to_s(x - 1, y));
 	if (y < 19 - 1) ret.push(xy_to_s(x, y + 1));
@@ -130,8 +137,7 @@ function play(s) {
 	if (!in_bounds(s)) {								// Treat as a pass.
 		return;
 	}
-	let x = s.charCodeAt(0) - 97;
-	let y = s.charCodeAt(1) - 97;
+	let [x, y] = s_to_xy(s);
 	board[x][y] = colour;
 	let caps = 0;
 	for (let neighbour of neighbours(s)) {
@@ -159,8 +165,7 @@ function destroy_group(s) {
 	let group = group_at(s);
 	let colour = state_at(s);
 	for (let s of group) {
-		let x = s.charCodeAt(0) - 97;
-		let y = s.charCodeAt(1) - 97;
+		let [x, y] = s_to_xy(s);
 		board[x][y] = EMPTY;
 	}
 	return group.length;
@@ -235,10 +240,6 @@ function canvas_xy_to_xy(gx, gy) {
 	if (y < 0) y = 0;
 	if (y >= 19) y = 19 - 1;
 	return [x, y];
-}
-
-function xy_to_s(x, y) {
-	return String.fromCharCode(x + 97) + String.fromCharCode(y + 97);
 }
 
 function draw() {
