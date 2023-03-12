@@ -56,7 +56,7 @@ function neighbours(s) {		// Returns a list of points (each in SGF format, e.g. 
 
 function legal_move(s) {		// Returns true if the active player can legally play at the point given. Does NOT consider passes as "legal moves".
 
-	if (!in_bounds(s) || state_at(s) || ko === s) {
+	if (!in_bounds(s) || state_at(s) !== EMPTY || ko === s) {
 		return false;
 	}
 
