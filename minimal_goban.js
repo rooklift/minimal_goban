@@ -77,13 +77,13 @@ function legal_move(s) {		// Returns true if the active player can legally play 
 		if (state_at(neighbour) === player) {
 			let touched = Object.create(null);
 			touched[s] = true;
-			if (has_liberties_recurse(neighbour, touched)) {
+			if (has_liberties(neighbour, touched)) {
 				return true;				// One of the groups we're joining has a liberty other than s.
 			}
 		} else if (state_at(neighbour) !== EMPTY) {
 			let touched = Object.create(null);
 			touched[s] = true;
-			if (!has_liberties_recurse(neighbour, touched)) {
+			if (!has_liberties(neighbour, touched)) {
 				return true;				// One of the enemy groups has no liberties other than s.
 			}
 		}
@@ -92,15 +92,10 @@ function legal_move(s) {		// Returns true if the active player can legally play 
 	return false;
 }
 
-function has_liberties(s) {
-	if (state_at(s) === EMPTY) {
-		return false;						// I guess? It means we got a bad call.
+function has_liberties(s, touched) {
+	if (!touched) {
+		touched = Object.create(null);
 	}
-	let touched = Object.create(null);
-	return has_liberties_recurse(s, touched);
-}
-
-function has_liberties_recurse(s, touched) {
 	touched[s] = true;
 	let colour = state_at(s);
 	for (let neighbour of neighbours(s)) {
@@ -112,7 +107,7 @@ function has_liberties_recurse(s, touched) {
 			return true;
 		}
 		if (neighbour_colour === colour) {
-			if (has_liberties_recurse(neighbour, touched)) {
+			if (has_liberties(neighbour, touched)) {
 				return true;
 			}
 		}
