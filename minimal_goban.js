@@ -60,11 +60,11 @@ function legal_move(s) {		// Returns true if the active player can legally play 
 		return false;
 	}
 
-	let neigh = neighbours(s);
+	let all_neighbours = neighbours(s);
 
 	// Move will be legal as long as it's not suicide...
 
-	for (let neighbour of neigh) {
+	for (let neighbour of all_neighbours) {
 		if (state_at(neighbour) === EMPTY) {
 			return true;					// New stone has a liberty.
 		}
@@ -73,7 +73,7 @@ function legal_move(s) {		// Returns true if the active player can legally play 
 	// Note that the above test is done there rather than inside the loop below
 	// because it's super-cheap and so worth doing in its entirety first.
 
-	for (let neighbour of neigh) {
+	for (let neighbour of all_neighbours) {
 		if (state_at(neighbour) === player) {
 			let touched = Object.create(null);
 			touched[s] = true;
