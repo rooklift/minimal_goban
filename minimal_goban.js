@@ -163,7 +163,6 @@ function destroy_group(s) {
 	// Destroys the group and returns the number of stones removed.
 
 	let group = group_at(s);
-	let colour = state_at(s);
 	for (let s of group) {
 		let [x, y] = s_to_xy(s);
 		board[x][y] = EMPTY;
